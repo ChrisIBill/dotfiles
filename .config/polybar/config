@@ -58,7 +58,7 @@ modules-left =  powermenu i3
 modules-center = primary-i3-window
 # 
 # modules-center = pulseaudio-control-input pulseaudio-control-output
-modules-right = filesystem xkeyboard memory cpu wlan eth date weather
+modules-right = filesystem xkeyboard memory cpu wlan eth redshift date weather
 ; modules-center = ipc clock
 
 ; The separator will be inserted between the output of each module
@@ -717,6 +717,15 @@ exec = ~/.config/polybar/scripts/polybar-i3-window/i3-window.py DP-0
 [module/auxillary-i3-window]
 inherit = module/i3-window
 exec = ~/.config/polybar/scripts/polybar-i3-window/i3-window.py HDMI-0
+
+[module/redshift]
+type = custom/script
+format-prefix = " "
+exec = . $HOME/.config/polybar/scripts/polybar-redshift/env.sh && $HOME/.config/polybar/scripts/polybar-redshift/redshift.sh temperature
+click-left = . $HOME/.config/polybar/scripts/polybar-redshift/env.sh && $HOME/.config/polybar/scripts/polybar-redshift/redshift.sh toggle 
+scroll-up = . $HOME/.config/polybar/scripts/polybar-redshift/env.sh && $HOME/.config/polybar/scripts/polybar-redshift/redshift.sh increase
+scroll-down = . $HOME/.config/polybar/scripts/polybar-redshift/env.sh && $HOME/.config/polybar/scripts/polybar-redshift/redshift.sh decrease
+interval=0.5
 
 [settings]
 screenchange-reload = true
