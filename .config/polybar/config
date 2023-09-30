@@ -15,7 +15,7 @@ monitor-strict = true
 background = ${colors.background}
 foreground = ${colors.foreground}
 width = 100%
-height = 30pt
+height = 3.4%
 ; Value used for drawing rounded corners
 ; For this to work you may also need to enable pseudo-transparency or use a
 ; compositor like picom.
@@ -24,7 +24,7 @@ height = 30pt
 ; or
 ;   radius-{top,bottom}-{left,right} (New in version 3.6.0)
 ; Polybar always uses the most specific radius definition for each corner.
-radius = 1.5
+radius = 1.5pt
 line-size = 3pt
 
 ; Padding (number of spaces, pixels, or points) to add at the beginning/end of
@@ -144,7 +144,7 @@ wm-restack = i3
 ; Set a DPI values used when rendering text
 ; This only affects scalable fonts
 ; Set this to 0 to let polybar calculate the dpi from the screen size.
-dpi = 0
+dpi = 267
 ; dpi-x = 0
 ; dpi-y = 0
 
@@ -312,7 +312,7 @@ wm-restack = i3
 ; Set a DPI values used when rendering text
 ; This only affects scalable fonts
 ; Set this to 0 to let polybar calculate the dpi from the screen size.
-dpi = 0
+dpi = 267
 ; dpi-x = 0
 ; dpi-y = 0
 

@@ -241,14 +241,14 @@ workspace 10 output HDMI-0
 
 ## Launching startup applications
 # Display Resolution
-exec_always xrandr --output DP-0 --mode 2560x1440 --rate 1440 --primary --output HDMI-0 --mode 1920x1080 --rate 60 --right-of DP-0
+exec_always xrandr --output eDP-1 --mode 3000x2000 --rate 60 --primary
 
 # @Polybar
 exec --no-startup-id $HOME/.config/polybar/launch_polybar.sh
 exec polybar-msg cmd hide
 #bindsym $mod+u exec polybar-msg cmd show
 #bindsym $mod exec polybar-msg cmd hide
-bindsym $mod+o exec polybar-msg cmd show, gaps top all set 30
+bindsym $mod+o exec polybar-msg cmd show, gaps top all set 30pt
 bindsym $mod+p gaps top all set 0, exec polybar-msg cmd hide
 
 
