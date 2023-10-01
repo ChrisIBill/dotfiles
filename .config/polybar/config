@@ -712,7 +712,7 @@ tail = true
 
 [module/primary-i3-window]
 inherit = module/i3-window
-exec = ~/.config/polybar/scripts/polybar-i3-window/i3-window.py DP-0
+exec = ~/.config/polybar/scripts/polybar-i3-window/i3-window.py eDP-1
 
 [module/auxillary-i3-window]
 inherit = module/i3-window
