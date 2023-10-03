@@ -1,0 +1,2 @@
+#!/bin/sh
+feh --no-fehbg --bg-fill '/home/chris/.config/variety/wallpaper/wallpaper-auto-rotated-a20caad2d6179d01c45638ff8ae9d9f7.jpg' 
