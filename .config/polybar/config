@@ -58,7 +58,7 @@ modules-left =  powermenu i3
 modules-center = primary-i3-window
 # 
 # modules-center = pulseaudio-control-input pulseaudio-control-output
-modules-right = filesystem xkeyboard memory cpu wlan eth date weather
+modules-right = filesystem xkeyboard memory cpu wlan eth date weather battery
 ; modules-center = ipc clock
 
 ; The separator will be inserted between the output of each module
@@ -655,6 +655,20 @@ label-foreground = ${colors.primary}
 [module/temperature]
 type = internal/temperature
 interval = 5
+
+[module/battery]
+type = internal/battery
+
+full-at = 100
+low-at = 15
+
+; Use the following command to list batteries and adapters:
+; $ ls -1 /sys/class/power_supply/
+battery = BAT1
+adapter = ACAD
+
+poll-interval = 30
+
 [module/weather]
 type = custom/script
 exec = $HOME/.config/polybar/weather-plugin.sh
