@@ -242,7 +242,11 @@ workspace 10 output HDMI-0
 
 ## Launching startup applications
 # Display Resolution
-exec_always xrandr --output DP-0 --mode 2560x1440 --rate 144 --primary --output HDMI-0 --mode 1920x1080 --rate 60 --right-of DP-0
+exec_always xrandr --output DP-0 --auto --primary --output HDMI-0 --auto --right-of DP-0
+
+#Launch feh to set wallpaper
+exec_always sh ~/.fehbg &
+
 
 # @Polybar
 exec --no-startup-id $HOME/.config/polybar/launch_polybar.sh

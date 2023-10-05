@@ -1,7 +1,6 @@
 lastupdatecheck: 0
 recentrepos:
-- /home/chris/.config
-- /home/chris/.config/nvim
+- /home/chris/coding/projects/weather-site
 startuppopupversion: 5
 customcommandshistory:
 - q
