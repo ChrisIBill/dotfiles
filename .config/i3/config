@@ -241,6 +241,7 @@ workspace 10 output eDP-1
 
 ## Launching startup applications
 # Display Resolution
+exec_always sh ~/.local/bin/auto-screen-rotate.sh
 exec_always sh ~/.fehbg &
 
 exec_always xrandr --output eDP-1 --mode 3000x2000 --rate 60 --primary
@@ -253,7 +254,7 @@ exec polybar-msg cmd hide
 #bindsym $mod+u exec polybar-msg cmd show
 #bindsym $mod exec polybar-msg cmd hide
 
-bindsym $mod+o exec polybar-msg cmd show, gaps top all set 34pt
+bindsym $mod+o exec polybar-msg cmd show, gaps top all set 30pt
 bindsym $mod+p gaps top all set 0, exec polybar-msg cmd hide
 
 
