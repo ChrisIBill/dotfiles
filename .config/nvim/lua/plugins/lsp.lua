@@ -235,10 +235,11 @@ return {
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         -- example to setup with typescript.nvim
-        tsserver = function(_, opts)
-          require("typescript").setup({ server = opts })
-          return true
-        end,
+        --TODO: Need to add new typescript handler
+        --tsserver = function(_, opts)
+        --  require("typescript").setup({ server = opts })
+        --  return true
+        --end,
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
       },
@@ -364,7 +365,7 @@ return {
     end,
   },
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
     event = { "BufReadPre", "BufNewFile" },
     dependencies = { "mason.nvim" },
     opts = function()
@@ -380,7 +381,7 @@ return {
           nls.builtins.diagnostics.eslint,
           nls.builtins.code_actions.eslint,
           nls.builtins.completion.spell,
-          require("typescript.extensions.null-ls.code-actions"),
+          --require("typescript.extensions.null-ls.code-actions"),
           -- nls.builtins.diagnostics.flake8,
         },
       }
@@ -393,7 +394,7 @@ return {
     end,
   },
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "nvimtools/none-ls.nvim",
     opts = function(_, opts)
       local nls = require("null-ls")
       table.insert(opts.sources, nls.builtins.formatting.prettierd)
