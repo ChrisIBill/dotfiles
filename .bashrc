@@ -147,6 +147,7 @@ alias mongorestart='sudo systemctl restart mongod'
 alias mongostatus='sudo systemctl status mongod'
 
 #USER ALIASES
+alias vimdiff='nvim -d'
 #SYSTEM ALIASES
 alias bootlin='cd / && cp /boot/grub.lin /boot.cfg && shutdown -r now'
 alias bootwin='cd / && cp /boot/grub.win /boot.cfg && shutdown -r now'
