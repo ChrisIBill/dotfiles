@@ -1,2 +1,2 @@
 #!/bin/sh
-feh --no-fehbg --bg-scale --randomize '/home/chris/Pictures/wallpapers/*'
+feh --no-fehbg --bg-fill '/home/chris/.config/variety/wallpaper/wallpaper-auto-rotated-b46d9f58b04449d71c7003b8fefa4342.jpg' 
