@@ -1,39 +1,12 @@
 return {
   {
-    "VonHeikemen/lsp-zero.nvim",
-    branch = "v2.x",
-    lazy = true,
-    config = function()
-      -- This is where you modify the settings for lsp-zero
-      -- Note: autocompletion settings will not take effect
-      require("lsp-zero.settings").preset({
-        name = "minimal",
-        set_lsp_keymaps = true,
-        manage_nvim_cmp = true,
-        suggest_lsp_servers = false,
-        sign_icons = {
-          Error = "",
-          Warning = "",
-          Hint = "",
-          Information = "",
-        },
-      })
-    end,
-  },
-  {
     "neovim/nvim-lspconfig",
-    cmd = "LspInfo",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "LazyFile",
     dependencies = {
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+      { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
       { "folke/neodev.nvim", opts = {} },
-      { "williamboman/mason-lspconfig.nvim" },
-      {
-        "hrsh7th/cmp-nvim-lsp",
-        cond = function()
-          return require("lazyvim.util").has("nvim-cmp")
-        end,
-      },
+      "mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
     },
     ---@class PluginLspOpts
     opts = {
@@ -43,7 +16,7 @@ return {
         update_in_insert = false,
         virtual_text = {
           spacing = 4,
-          source = "always",
+          source = "if_many",
           prefix = "●",
           -- this will set set the prefix to a function that returns the diagnostics icon based on the severity
           -- this only works on a recent 0.10.0 build. Will be set to "●" when not supported
@@ -59,11 +32,6 @@ return {
       },
       -- add any global capabilities here
       capabilities = {},
-      -- Automatically format on save
-      autoformat = true,
-      -- Enable this to show formatters used in a notification
-      -- Useful for debugging formatter issues
-      format_notify = false,
       -- options for vim.lsp.buf.format
       -- `bufnr` and `filter` is handled by the LazyVim formatter,
       -- but can be also overridden when specified
@@ -74,12 +42,11 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
-        jsonls = {},
         lua_ls = {
           -- mason = false, -- set to false if you don't want this server to be installed with mason
           -- Use this to add any additional keymaps
           -- for specific lsp servers
-          ---@type LazyKeys[]
+          ---@type LazyKeysSpec[]
           -- keys = {},
           settings = {
             Lua = {
@@ -92,69 +59,44 @@ return {
             },
           },
         },
-        tsserver = {
-          keys = {
-            { "<leader>co", "<cmd>TypescriptOrganizeImports<CR>", desc = "Organize Imports" },
-            { "<leader>cR", "<cmd>TypescriptRenameFile<CR>", desc = "Rename File" },
-          },
-          settings = {
-            typescript = {
-              format = {
-                indentSize = vim.o.shiftwidth,
-                convertTabsToSpaces = vim.o.expandtab,
-                tabSize = vim.o.tabstop,
-              },
-            },
-            javascript = {
-              format = {
-                indentSize = vim.o.shiftwidth,
-                convertTabsToSpaces = vim.o.expandtab,
-                tabSize = vim.o.tabstop,
-              },
-            },
-            completions = {
-              completeFunctionCalls = true,
-            },
-          },
-        },
-        --@TODO
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
         -- example to setup with typescript.nvim
-        --TODO: Need to add new typescript handler
-        --tsserver = function(_, opts)
-        --  require("typescript").setup({ server = opts })
-        --  return true
-        --end,
+        -- tsserver = function(_, opts)
+        --   require("typescript").setup({ server = opts })
+        --   return true
+        -- end,
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
       },
     },
     ---@param opts PluginLspOpts
     config = function(_, opts)
-      local Util = require("lazyvim.util")
+      if Util.has("neoconf.nvim") then
+        local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
+        require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
+      end
+
       -- setup autoformat
       Util.format.register(Util.lsp.formatter())
 
-      -- @TODO
-      --lsp.ensure_installed({
-      --    "tsserver",
-      --    "eslint",
-      --    "lua_ls",
-      --    "rust_analyzer",
-      --    "csharp_ls",
-      --})
-      -- setup formatting and keymaps
-      Util.on_attach(function(client, buffer)
+      -- deprectaed options
+      if opts.autoformat ~= nil then
+        vim.g.autoformat = opts.autoformat
+        Util.deprecate("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
+      end
+
+      -- setup keymaps
+      Util.lsp.on_attach(function(client, buffer)
         require("lazyvim.plugins.lsp.keymaps").on_attach(client, buffer)
       end)
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
 
-      register_capability = function(err, res, ctx)
+      vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
         local ret = register_capability(err, res, ctx)
         local client_id = ctx.client_id
         ---@type lsp.Client
@@ -173,8 +115,8 @@ return {
       local inlay_hint = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
 
       if opts.inlay_hints.enabled and inlay_hint then
-        Util.on_attach(function(client, buffer)
-          if client.server_capabilities.inlayHintProvider then
+        Util.lsp.on_attach(function(client, buffer)
+          if client.supports_method("textDocument/inlayHint") then
             inlay_hint(buffer, true)
           end
         end)
@@ -195,11 +137,12 @@ return {
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
       local servers = opts.servers
+      local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
       local capabilities = vim.tbl_deep_extend(
         "force",
         {},
         vim.lsp.protocol.make_client_capabilities(),
-        require("cmp_nvim_lsp").default_capabilities(),
+        has_cmp and cmp_nvim_lsp.default_capabilities() or {},
         opts.capabilities or {}
       )
 
@@ -220,7 +163,7 @@ return {
         require("lspconfig")[server].setup(server_opts)
       end
 
-      -- get all the servers that are available thourgh mason-lspconfig
+      -- get all the servers that are available through mason-lspconfig
       local have_mason, mlsp = pcall(require, "mason-lspconfig")
       local all_mslp_servers = {}
       if have_mason then
@@ -244,50 +187,52 @@ return {
         mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
       end
 
-      if Util.lsp_get_config("denols") and Util.lsp_get_config("tsserver") then
+      if Util.lsp.get_config("denols") and Util.lsp.get_config("tsserver") then
         local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        Util.lsp_disable("tsserver", is_deno)
-        Util.lsp_disable("denols", function(root_dir)
+        Util.lsp.disable("tsserver", is_deno)
+        Util.lsp.disable("denols", function(root_dir)
           return not is_deno(root_dir)
         end)
       end
     end,
   },
+  --TODO: Drop or keep none-ls
+  --  {
+  --    "nvimtools/none-ls.nvim",
+  --    event = { "BufReadPre", "BufNewFile" },
+  --    dependencies = { "mason.nvim" },
+  --    opts = function()
+  --      local nls = require("null-ls")
+  --      return {
+  --        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
+  --        sources = {
+  --          nls.builtins.formatting.fish_indent,
+  --          nls.builtins.diagnostics.fish,
+  --          nls.builtins.formatting.stylua,
+  --          nls.builtins.formatting.shfmt,
+  --          nls.builtins.formatting.prettier,
+  --          nls.builtins.diagnostics.eslint,
+  --          nls.builtins.code_actions.eslint,
+  --          nls.builtins.completion.spell,
+  --          --require("typescript.extensions.null-ls.code-actions"),
+  --          -- nls.builtins.diagnostics.flake8,
+  --        },
+  --      }
+  --    end,
+  --  },
   {
-    "nvimtools/none-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "mason.nvim" },
-    opts = function()
-      local nls = require("null-ls")
-      return {
-        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
-        sources = {
-          nls.builtins.formatting.fish_indent,
-          nls.builtins.diagnostics.fish,
-          nls.builtins.formatting.stylua,
-          nls.builtins.formatting.shfmt,
-          nls.builtins.formatting.prettier,
-          nls.builtins.diagnostics.eslint,
-          nls.builtins.code_actions.eslint,
-          nls.builtins.completion.spell,
-          --require("typescript.extensions.null-ls.code-actions"),
-          -- nls.builtins.diagnostics.flake8,
-        },
-      }
-    end,
-  },
-  {
+
     "williamboman/mason.nvim",
-    opts = function(_, opts)
-      table.insert(opts.ensure_installed, "prettierd")
-    end,
-  },
-  {
-    "nvimtools/none-ls.nvim",
-    opts = function(_, opts)
-      local nls = require("null-ls")
-      table.insert(opts.sources, nls.builtins.formatting.prettierd)
-    end,
+    cmd = "Mason",
+    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+    build = ":MasonUpdate",
+    opts = {
+      ensure_installed = {
+        "stylua",
+        "shfmt",
+        -- "flake8",
+      },
+    },
   },
   opts = {
     servers = {
