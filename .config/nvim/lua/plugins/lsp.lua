@@ -1,150 +1,12 @@
 return {
   {
-    "VonHeikemen/lsp-zero.nvim",
-    branch = "v2.x",
-    lazy = true,
-    config = function()
-      -- This is where you modify the settings for lsp-zero
-      -- Note: autocompletion settings will not take effect
-      require("lsp-zero.settings").preset({
-        name = "minimal",
-        set_lsp_keymaps = true,
-        manage_nvim_cmp = true,
-        suggest_lsp_servers = false,
-        sign_icons = {
-          Error = "",
-          Warning = "",
-          Hint = "",
-          Information = "",
-        },
-      })
-    end,
-  },
-
-  -- Autocompletion
-  --  {
-  --    "hrsh7th/nvim-cmp",
-  --    version = false, -- last release is way too old
-  --    event = "InsertEnter",
-  --    dependencies = {
-  --      "hrsh7th/cmp-nvim-lsp",
-  --      "hrsh7th/cmp-path",
-  --      "hrsh7th/cmp-buffer",
-  --      "hrsh7th/cmp-cmdline",
-  --      --"L3MON4D3/LuaSnip",
-  --      "saadparwaiz1/cmp_luasnip",
-  --    },
-  --    opts = function()
-  --      --require("lsp-zero.cmp").extend()
-  --      vim.api.nvim_set_hl(0, "CmpGhostText", { link = "Comment", default = true })
-  --      local cmp = require("cmp")
-  --      local defaults = require("cmp.config.default")()
-  --      --@TODO Do we still need these functions?
-  --      local is_whitespace = function()
-  --        -- returns true if the character under the cursor is whitespace.
-  --        local col = vim.fn.col(".") - 0
-  --        local line = vim.fn.getline(".")
-  --        local char_under_cursor = string.sub(line, col, col)
-  --
-  --        if col == -1 or string.match(char_under_cursor, "%s") then
-  --          return true
-  --        else
-  --          return false
-  --        end
-  --      end
-  --
-  --      local is_comment = function()
-  --        -- uses treesitter to determine if cursor is currently in a comment.
-  --        local context = require("cmp.config.context")
-  --        return context.in_treesitter_capture("comment") == true or context.in_syntax_group("Comment")
-  --      end
-  --      return {
-  --        completion = {
-  --          completeopt = "menu,menuone,noinsert",
-  --        },
-  --        snippet = {
-  --          expand = function(args)
-  --            require("luasnip").lsp_expand(args.body)
-  --          end,
-  --        },
-  --        mapping = cmp.mapping.preset.insert({
-  --          ["<C-n>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-  --          ["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-  --          ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-  --          ["<C-f>"] = cmp.mapping.scroll_docs(4),
-  --          ["<C-Space>"] = cmp.mapping.complete(),
-  --          ["<C-e>"] = cmp.mapping.abort(),
-  --          ["<CR>"] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-  --          ["<S-CR>"] = cmp.mapping.confirm({
-  --            behavior = cmp.ConfirmBehavior.Replace,
-  --            select = true,
-  --          }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-  --        }),
-  --        sources = cmp.config.sources({
-  --          { name = "nvim_lsp" },
-  --          { name = "luasnip" },
-  --          { name = "buffer" },
-  --          { name = "path" },
-  --          { name = "cmdline" },
-  --        }),
-  --        formatting = {
-  --          format = function(_, item)
-  --            local icons = require("lazyvim.config").icons.kinds
-  --            if icons[item.kind] then
-  --              item.kind = icons[item.kind] .. item.kind
-  --            end
-  --            return item
-  --          end,
-  --        },
-  --        experimental = {
-  --          ghost_text = {
-  --            hl_group = "CmpGhostText",
-  --          },
-  --        },
-  --        sorting = defaults.sorting,
-  --        enabled = function()
-  --          if is_whitespace() or is_comment() then
-  --            return false
-  --          else
-  --            return true
-  --          end
-  --        end,
-  --        --cmdline = ({ "/", "?" }, {
-  --        --  sources = {
-  --        --    { name = "buffer" },
-  --        --  },
-  --        --})
-  --        --cmdline(":", {
-  --        --sources = {
-  --        --  { name = "cmdline" },
-  --        --},
-  --        --}),
-  --      }
-  --    end,
-  --    -- cmp.event:on("menu_opened", function()
-  --    --   vim.b.copilot_suggestion_hidden = true
-  --    -- end)
-  --    -- cmp.event:on("menu_closed", function()
-  --    --   vim.b.copilot_suggestion_hidden = false
-  --    -- end)
-  --  },
-
-  -- LSP
-
-  {
     "neovim/nvim-lspconfig",
-    cmd = "LspInfo",
-    event = { "BufReadPre", "BufNewFile" },
+    event = "LazyFile",
     dependencies = {
-      { "folke/neoconf.nvim", cmd = "Neoconf", config = true },
+      { "folke/neoconf.nvim", cmd = "Neoconf", config = false, dependencies = { "nvim-lspconfig" } },
       { "folke/neodev.nvim", opts = {} },
-      { "williamboman/mason-lspconfig.nvim" },
-      {
-        "hrsh7th/cmp-nvim-lsp",
-        cond = function()
-          return require("lazyvim.util").has("nvim-cmp")
-        end,
-      },
+      "mason.nvim",
+      "williamboman/mason-lspconfig.nvim",
     },
     ---@class PluginLspOpts
     opts = {
@@ -170,11 +32,6 @@ return {
       },
       -- add any global capabilities here
       capabilities = {},
-      -- Automatically format on save
-      autoformat = true,
-      -- Enable this to show formatters used in a notification
-      -- Useful for debugging formatter issues
-      format_notify = false,
       -- options for vim.lsp.buf.format
       -- `bufnr` and `filter` is handled by the LazyVim formatter,
       -- but can be also overridden when specified
@@ -185,12 +42,11 @@ return {
       -- LSP Server Settings
       ---@type lspconfig.options
       servers = {
-        jsonls = {},
         lua_ls = {
           -- mason = false, -- set to false if you don't want this server to be installed with mason
           -- Use this to add any additional keymaps
           -- for specific lsp servers
-          ---@type LazyKeys[]
+          ---@type LazyKeysSpec[]
           -- keys = {},
           settings = {
             Lua = {
@@ -203,37 +59,49 @@ return {
             },
           },
         },
-        tsserver = {
-          keys = {
-            { "<leader>co", "<cmd>TypescriptOrganizeImports<CR>", desc = "Organize Imports" },
-            { "<leader>cR", "<cmd>TypescriptRenameFile<CR>", desc = "Rename File" },
-          },
+        eslint = {
           settings = {
-            typescript = {
-              format = {
-                indentSize = vim.o.shiftwidth,
-                convertTabsToSpaces = vim.o.expandtab,
-                tabSize = vim.o.tabstop,
-              },
-            },
-            javascript = {
-              format = {
-                indentSize = vim.o.shiftwidth,
-                convertTabsToSpaces = vim.o.expandtab,
-                tabSize = vim.o.tabstop,
-              },
-            },
-            completions = {
-              completeFunctionCalls = true,
-            },
+            workingDirectory = { mode = "auto" },
           },
         },
-        --@TODO
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
       ---@type table<string, fun(server:string, opts:_.lspconfig.options):boolean?>
       setup = {
+        eslint = function()
+          local function get_client(buf)
+            return require("lazyvim.util").lsp.get_clients({ name = "eslint", bufnr = buf })[1]
+          end
+
+          local formatter = require("lazyvim.util").lsp.formatter({
+            name = "eslint: lsp",
+            primary = false,
+            priority = 200,
+            filter = "eslint",
+          })
+
+          -- Use EslintFixAll on Neovim < 0.10.0
+          if not pcall(require, "vim.lsp._dynamic") then
+            formatter.name = "eslint: EslintFixAll"
+            formatter.sources = function(buf)
+              local client = get_client(buf)
+              return client and { "eslint" } or {}
+            end
+            formatter.format = function(buf)
+              local client = get_client(buf)
+              if client then
+                local diag = vim.diagnostic.get(buf, { namespace = vim.lsp.diagnostic.get_namespace(client.id) })
+                if #diag > 0 then
+                  vim.cmd("EslintFixAll")
+                end
+              end
+            end
+          end
+
+          -- register the formatter with LazyVim
+          require("lazyvim.util").format.register(formatter)
+        end,
         -- example to setup with typescript.nvim
         tsserver = function(_, opts)
           require("typescript").setup({ server = opts })
@@ -246,25 +114,28 @@ return {
     ---@param opts PluginLspOpts
     config = function(_, opts)
       local Util = require("lazyvim.util")
-      -- setup autoformat
-      require("lazyvim.plugins.lsp.format").setup(opts)
+      if Util.has("neoconf.nvim") then
+        local plugin = require("lazy.core.config").spec.plugins["neoconf.nvim"]
+        require("neoconf").setup(require("lazy.core.plugin").values(plugin, "opts", false))
+      end
 
-      -- @TODO
-      --lsp.ensure_installed({
-      --    "tsserver",
-      --    "eslint",
-      --    "lua_ls",
-      --    "rust_analyzer",
-      --    "csharp_ls",
-      --})
-      -- setup formatting and keymaps
-      Util.on_attach(function(client, buffer)
+      -- setup autoformat
+      Util.format.register(Util.lsp.formatter())
+
+      -- deprectaed options
+      if opts.autoformat ~= nil then
+        vim.g.autoformat = opts.autoformat
+        Util.deprecate("nvim-lspconfig.opts.autoformat", "vim.g.autoformat")
+      end
+
+      -- setup keymaps
+      Util.lsp.on_attach(function(client, buffer)
         require("lazyvim.plugins.lsp.keymaps").on_attach(client, buffer)
       end)
 
       local register_capability = vim.lsp.handlers["client/registerCapability"]
 
-      register_capability = function(err, res, ctx)
+      vim.lsp.handlers["client/registerCapability"] = function(err, res, ctx)
         local ret = register_capability(err, res, ctx)
         local client_id = ctx.client_id
         ---@type lsp.Client
@@ -283,8 +154,8 @@ return {
       local inlay_hint = vim.lsp.buf.inlay_hint or vim.lsp.inlay_hint
 
       if opts.inlay_hints.enabled and inlay_hint then
-        Util.on_attach(function(client, buffer)
-          if client.server_capabilities.inlayHintProvider then
+        Util.lsp.on_attach(function(client, buffer)
+          if client.supports_method("textDocument/inlayHint") then
             inlay_hint(buffer, true)
           end
         end)
@@ -305,11 +176,12 @@ return {
       vim.diagnostic.config(vim.deepcopy(opts.diagnostics))
 
       local servers = opts.servers
+      local has_cmp, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
       local capabilities = vim.tbl_deep_extend(
         "force",
         {},
         vim.lsp.protocol.make_client_capabilities(),
-        require("cmp_nvim_lsp").default_capabilities(),
+        has_cmp and cmp_nvim_lsp.default_capabilities() or {},
         opts.capabilities or {}
       )
 
@@ -330,7 +202,7 @@ return {
         require("lspconfig")[server].setup(server_opts)
       end
 
-      -- get all the servers that are available thourgh mason-lspconfig
+      -- get all the servers that are available through mason-lspconfig
       local have_mason, mlsp = pcall(require, "mason-lspconfig")
       local all_mslp_servers = {}
       if have_mason then
@@ -354,50 +226,52 @@ return {
         mlsp.setup({ ensure_installed = ensure_installed, handlers = { setup } })
       end
 
-      if Util.lsp_get_config("denols") and Util.lsp_get_config("tsserver") then
+      if Util.lsp.get_config("denols") and Util.lsp.get_config("tsserver") then
         local is_deno = require("lspconfig.util").root_pattern("deno.json", "deno.jsonc")
-        Util.lsp_disable("tsserver", is_deno)
-        Util.lsp_disable("denols", function(root_dir)
+        Util.lsp.disable("tsserver", is_deno)
+        Util.lsp.disable("denols", function(root_dir)
           return not is_deno(root_dir)
         end)
       end
     end,
   },
+  --TODO: Drop or keep none-ls
+  --  {
+  --    "nvimtools/none-ls.nvim",
+  --    event = { "BufReadPre", "BufNewFile" },
+  --    dependencies = { "mason.nvim" },
+  --    opts = function()
+  --      local nls = require("null-ls")
+  --      return {
+  --        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
+  --        sources = {
+  --          nls.builtins.formatting.fish_indent,
+  --          nls.builtins.diagnostics.fish,
+  --          nls.builtins.formatting.stylua,
+  --          nls.builtins.formatting.shfmt,
+  --          nls.builtins.formatting.prettier,
+  --          nls.builtins.diagnostics.eslint,
+  --          nls.builtins.code_actions.eslint,
+  --          nls.builtins.completion.spell,
+  --          --require("typescript.extensions.null-ls.code-actions"),
+  --          -- nls.builtins.diagnostics.flake8,
+  --        },
+  --      }
+  --    end,
+  --  },
   {
-    "jose-elias-alvarez/null-ls.nvim",
-    event = { "BufReadPre", "BufNewFile" },
-    dependencies = { "mason.nvim" },
-    opts = function()
-      local nls = require("null-ls")
-      return {
-        root_dir = require("null-ls.utils").root_pattern(".null-ls-root", ".neoconf.json", "Makefile", ".git"),
-        sources = {
-          nls.builtins.formatting.fish_indent,
-          nls.builtins.diagnostics.fish,
-          nls.builtins.formatting.stylua,
-          nls.builtins.formatting.shfmt,
-          nls.builtins.formatting.prettier,
-          nls.builtins.diagnostics.eslint,
-          nls.builtins.code_actions.eslint,
-          nls.builtins.completion.spell,
-          require("typescript.extensions.null-ls.code-actions"),
-          -- nls.builtins.diagnostics.flake8,
-        },
-      }
-    end,
-  },
-  {
+
     "williamboman/mason.nvim",
-    opts = function(_, opts)
-      table.insert(opts.ensure_installed, "prettierd")
-    end,
-  },
-  {
-    "jose-elias-alvarez/null-ls.nvim",
-    opts = function(_, opts)
-      local nls = require("null-ls")
-      table.insert(opts.sources, nls.builtins.formatting.prettierd)
-    end,
+    cmd = "Mason",
+    keys = { { "<leader>cm", "<cmd>Mason<cr>", desc = "Mason" } },
+    build = ":MasonUpdate",
+    opts = {
+      ensure_installed = {
+        "stylua",
+        "shfmt",
+        -- "flake8",
+      },
+    },
   },
   opts = {
     servers = {
