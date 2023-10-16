@@ -64,6 +64,9 @@ return {
             workingDirectory = { mode = "auto" },
           },
         },
+        tsserver = {
+          settings = {},
+        },
       },
       -- you can do any additional lsp server setup here
       -- return true if you don't want this server to be setup with lspconfig
@@ -103,10 +106,10 @@ return {
           require("lazyvim.util").format.register(formatter)
         end,
         -- example to setup with typescript.nvim
-        tsserver = function(_, opts)
-          require("typescript").setup({ server = opts })
-          return true
-        end,
+        -- tsserver = function(_, opts)
+        --   require("typescript").setup({ server = opts })
+        --   return true
+        -- end,
         -- Specify * to use this function as a fallback for any server
         -- ["*"] = function(server, opts) end,
       },
