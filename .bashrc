@@ -166,6 +166,12 @@ export PATH=$PATH:/usr/local/go/bin
 #Dotfiles git alias
 alias config='/usr/bin/git --git-dir=/home/chris/.cfg/ --work-tree=/home/chris'
 
+## USER DEFINED FUNCTIONS
+calc() {
+	echo "$*" | bc -l
+}
+export -f calc
+
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/home/chris/anaconda3/bin/conda' 'shell.bash' 'hook' 2>/dev/null)"
