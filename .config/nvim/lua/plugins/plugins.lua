@@ -65,4 +65,12 @@ return {
       html = { names = false },
     },
   },
+  {
+    "kkoomen/vim-doge",
+    run = ":call doge#install()",
+    opts = {
+      doge_mapping = "<leader>cD",
+    },
+    config = function() end,
+  },
 }

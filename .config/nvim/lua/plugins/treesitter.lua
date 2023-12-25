@@ -22,6 +22,7 @@ return {
       { "<bs>", desc = "Decrement selection", mode = "x" },
     },
     ---@type TSConfig
+    ---@diagnostic disable-next-line: missing-fields
     opts = {
       highlight = { enable = true },
       indent = { enable = true },
@@ -43,6 +44,7 @@ return {
         "ron",
         "rust",
         "toml",
+        "ts",
         "tsx",
         "typescript",
         "vim",

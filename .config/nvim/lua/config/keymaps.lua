@@ -206,3 +206,10 @@ map("n", "<leader><tab>[", "<cmd>tabprevious<cr>", { desc = "Previous Tab" })
 -- color-picker
 map("n", "<leader>cc", "<cmd>PickColor<cr>", { desc = "Color Picker" })
 map("i", "<C-q>", "<cmd>PickColorInsert<cr>", { desc = "Color Picker" })
+
+--Doge document generation
+map("n", "<leader>cD", "<cmd>DogeGenerate<cr>", { desc = "DogeGenerate" })
+map("i", "<C-d>", "<cmd>Doge.comment.jump.forward<cr>", { desc = "Jump to next Doc todo"})
+map("i", "<C-D>", "<cmd>Doge.comment.jump.backward<cr>", { desc = "Jump to previous Doc todo"})
+map("n", "<leader>cn", "<cmd>Doge.comment.jump.forward<cr>", { desc = "Jump to next Doc todo"})
+map("n", "<leader>cp", "<cmd>Doge.comment.jump.backward<cr>", { desc = "Jump to previous Doc todo"})
