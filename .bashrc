@@ -131,6 +131,11 @@ export PROJECT_HOME=$HOME/Devel
 export VIRTUALENVWRAPPER_VIRTUALENV=/home/chris/.local/bin/virtualenv
 source ~/.local/bin/virtualenvwrapper.sh
 
+# Dotnet
+export DOTNET_ROOT=/usr/share/dotnet
+export DOTNET_TOOLS=$HOME/.dotnet/tools
+export PATH=$PATH:$DOTNET_TOOLS
+
 #NVIM
 export CUSTOM_NVIM_PATH=/usr/local/bin/nvim.appimage
 #Extending path with custom scripts
@@ -138,8 +143,15 @@ export PATH=$PATH:~/.scripts/
 
 export SSH_AUTH_SOCK=~/.1password/agent.sock
 
-alias nvim=$CUSTOM_NVIM_PATH
-alias snvim='sudo -E -s nvim'
+## ENVIRONMENT VARIABLES
+export LOCAL_SCRIPTS=$HOME/.local/bin/
+export PROJECTS_HOME=$HOME/coding/projects
+export CODING_HOME=$HOME/coding
+export CURRENT_PROJECT=$PROJECTS_HOME/portfolio-site/
+export TEST_VAR="Test Variable"
+
+## ALIASES
+#
 #MONGO ALIASES
 alias mongostart='sudo systemctl start mongod'
 alias mongostop='sudo systemctl stop mongod'
@@ -147,7 +159,11 @@ alias mongorestart='sudo systemctl restart mongod'
 alias mongostatus='sudo systemctl status mongod'
 
 #USER ALIASES
+alias nvim=$CUSTOM_NVIM_PATH
+alias snvim='sudo -E -s nvim'
 alias vimdiff='nvim -d'
+alias startproj='cd $CURRENT_PROJECT && tmux split-window -v npm run dev && tmux split-window -h && tmux select-pane -U && nvim .'
+alias setproj='export CURRENT_PROJECT=$PROJECTS_HOME/$1'
 #SYSTEM ALIASES
 alias bootlin='cd / && cp /boot/grub.lin /boot.cfg && shutdown -r now'
 alias bootwin='cd / && cp /boot/grub.win /boot.cfg && shutdown -r now'
@@ -237,3 +253,4 @@ alias cd='cdnvm'
 cdnvm "$PWD" || exit
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
+export PATH="$PATH:/opt/mssql-tools18/bin"
