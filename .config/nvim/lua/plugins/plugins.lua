@@ -73,4 +73,13 @@ return {
     },
     config = function() end,
   },
+  --{
+  --  "neovim/nvim-treesitter",
+  --  config = function()
+  --    require("lspconfig").jsonls.setup({
+  --      filetypes = { "json", "jsonc", "log" },
+  --    })
+  --  end,
+  --  opts = function(_, opts) end,
+  --},
 }
