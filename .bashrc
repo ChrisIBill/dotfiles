@@ -180,7 +180,11 @@ alias factorio='bash ~/.config/factorio/factorio.sh'
 export PATH=$PATH:/usr/local/go/bin
 
 #Dotfiles git alias
-alias config='/usr/bin/git --git-dir=/home/chris/.cfg/ --work-tree=/home/chris'
+export DOTFILES=$HOME/.cfg
+alias config-args='--git-dir=$DOTFILES --work-tree=$HOME'
+#alias config='/usr/bin/git --git-dir=/home/chris/.cfg/ --work-tree=/home/chris'
+alias config='/usr/bin/git --git-dir=$HOME/.cfg --work-tree=$HOME'
+alias config-lazygit='lazygit --git-dir=$DOTFILES --work-tree=$HOME'
 
 ## USER DEFINED FUNCTIONS
 calc() {
