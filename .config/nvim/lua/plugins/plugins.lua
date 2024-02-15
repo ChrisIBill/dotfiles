@@ -73,6 +73,38 @@ return {
     },
     config = function() end,
   },
+  {
+    "barrett-ruth/import-cost.nvim",
+    build = "sh install.sh npm",
+    -- if on windows
+    -- build = 'pwsh install.ps1 yarn',
+    config = function(opts)
+      require("import-cost").setup({
+        filetypes = {
+          "javascript",
+          "javascriptreact",
+          "typescript",
+          "typescriptreact",
+        },
+        format = {
+          -- Format string for bytes/kilobytes in virtual text
+          byte_format = "%.1fb",
+          kb_format = "%.1fk",
+          -- Virtual text format (remove second "%s" to ignore gzipped size)
+          virtual_text = "%s (gzipped: %s)",
+        },
+        highlight = "Comment",
+        wrap_lines = true,
+      })
+    end,
+    --opts = function(_, opts)
+    --  if type(opts.format) == "table" then
+    --    opts.format.byte_format = "%.1fb"
+    --    opts.format.kb_format = "%.1fk"
+    --    opts.format.virtual_text = "%s (gzipped: %s)"
+    --  end
+    --end,
+  },
   --{
   --  "neovim/nvim-treesitter",
   --  config = function()
