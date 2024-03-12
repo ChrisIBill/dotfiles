@@ -3,6 +3,8 @@ return {
     "hrsh7th/nvim-cmp",
     ---@param opts cmp.ConfigSchema
     opts = function(_, opts)
+      table.insert(opts.sources, 1, { name = "luasnip", group_index = 1, priority = 200 })
+      table.insert(opts.sources, 2, { name = "codeium", groupd_index = 2, priority = 100 })
       local cmp = require("cmp")
       opts.preselect = cmp.PreselectMode.None
       opts.completion = {

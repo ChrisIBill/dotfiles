@@ -1,3 +1,10 @@
+-- PERF:
+-- HACK:
+-- TODO:
+-- NOTE:
+-- FIX:
+-- WARNING:
+
 return {
   {
     "folke/todo-comments.nvim",
@@ -6,8 +13,13 @@ return {
     config = true,
     opts = {
       keywords = {
+        PERF = {},
+        HACK = {},
+        TODO = {
+          alt = { "ISSUE" },
+        },
         FIX = {
-          alt = { "DEPRECATED", "DEPR" },
+          alt = { "DEPRECATED", "DEPR", "WONDER" },
         },
       },
     },

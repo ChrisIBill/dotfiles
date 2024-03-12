@@ -1,3 +1,10 @@
+-- disable treesitter
+-- return {
+--   {
+--     "nvim-treesitter/nvim-treesitter",
+--     enabled = false,
+--   },
+-- }
 return {
   {
     "nvim-treesitter/nvim-treesitter",
