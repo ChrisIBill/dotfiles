@@ -131,10 +131,15 @@ export PROJECT_HOME=$HOME/Devel
 export VIRTUALENVWRAPPER_VIRTUALENV=/home/chris/.local/bin/virtualenv
 source ~/.local/bin/virtualenvwrapper.sh
 
+# Discord
+export PATH="$PATH:/usr/bin/discord"
 # Dotnet
 export DOTNET_ROOT=/usr/share/dotnet
 export DOTNET_TOOLS=$HOME/.dotnet/tools
-export PATH=$PATH:$DOTNET_TOOLS
+export PATH="$PATH:$DOTNET_TOOLS"
+export PATH="$PATH:$HOME/.dotnet"
+export PATH="$PATH:$HOME/.dotnet/tools"
+export PATH="$PATH:$DOTNET_ROOT"
 
 #NVIM
 export CUSTOM_NVIM_PATH=/usr/local/bin/nvim.appimage
