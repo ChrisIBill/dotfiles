@@ -160,8 +160,8 @@ if vim.lsp.inlay_hint then
 end
 
 -- lazygit
-map("n", "<leader>gg", function() Util.float_term({ "lazygit" }, { cwd = Util.get_root(), esc_esc = false, ctrl_hjkl = false }) end, { desc = "Lazygit (root dir)" })
-map("n", "<leader>gG", function() Util.float_term({ "lazygit" }, {esc_esc = false, ctrl_hjkl = false}) end, { desc = "Lazygit (cwd)" })
+map("n", "<leader>gg", function() Util.terminal.open({ "lazygit" }, { cwd = Util.root.get(), esc_esc = false, ctrl_hjkl = false }) end, { desc = "Lazygit (root dir)" })
+map("n", "<leader>gG", function() Util.terminal.open({ "lazygit" }, {esc_esc = false, ctrl_hjkl = false}) end, { desc = "Lazygit (cwd)" })
 
 -- quit
 map("n", "<leader>qq", "<cmd>qa<cr>", { desc = "Quit all" })
@@ -172,9 +172,9 @@ if vim.fn.has("nvim-0.9.0") == 1 then
 end
 
 -- floating terminal
-local lazyterm = function() Util.float_term(nil, { cwd = Util.get_root() }) end
+local lazyterm = function() Util.terminal.open(nil, { cwd = Util.root.get() }) end
 map("n", "<leader>ft", lazyterm, { desc = "Terminal (root dir)" })
-map("n", "<leader>fT", function() Util.float_term() end, { desc = "Terminal (cwd)" })
+map("n", "<leader>fT", function() Util.terminal.open() end, { desc = "Terminal (cwd)" })
 map("n", "<c-/>", lazyterm, { desc = "Terminal (root dir)" })
 map("n", "<c-_>", lazyterm, { desc = "which_key_ignore" })
 
@@ -213,3 +213,17 @@ map("i", "<C-d>", "<cmd>Doge.comment.jump.forward<cr>", { desc = "Jump to next D
 map("i", "<C-D>", "<cmd>Doge.comment.jump.backward<cr>", { desc = "Jump to previous Doc todo"})
 map("n", "<leader>cn", "<cmd>Doge.comment.jump.forward<cr>", { desc = "Jump to next Doc todo"})
 map("n", "<leader>cp", "<cmd>Doge.comment.jump.backward<cr>", { desc = "Jump to previous Doc todo"})
+
+map("i", "<C-f>", "<C-O>za", { desc = "Toggle Fold"})
+map("n", "<C-f>", "za", { desc = "Toggle Fold"})
+map("o", "<C-f>", "<C-C>za", { desc = "Toggle Fold"})
+map("v", "<C-f>", "zf", { desc = "Fold Visual Selection"})
+
+--Close floating windows
+map("n", "<leader>wf", function()
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+        if vim.api.nvim_win_get_config(win).relative == "win" then
+            vim.api.nvim_win_close(win, false)
+        end
+    end
+end, { desc = "Close floating windows" })
