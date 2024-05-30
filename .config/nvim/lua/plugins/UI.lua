@@ -12,7 +12,10 @@ return {
         ╚█████╔╝██║  ██║███████╗   ██║           ╚██╔╝  ██║██║ ╚═╝ ██║
          ╚════╝ ╚═╝  ╚═╝╚══════╝   ╚═╝            ╚═╝   ╚═╝╚═╝     ╚═╝
      ]]
-      logo = string.rep("\n", 8) .. logo .. "\n\n"
+      local ver = vim.version()
+      local version = "Neovim v" .. ver.major .. "." .. ver.minor .. "." .. ver.patch
+
+      logo = string.rep("\n", 8) .. logo .. version .. "\n\n"
 
       local opts = {
         theme = "doom",
